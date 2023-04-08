@@ -21,21 +21,19 @@ class ImageUploadController extends Controller
 
     public function save(Request $request)
     {
-try{
+      try{
         $validatedData = $request->validate([
          'img' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
 
         ]);
 
-        if ($request->hasFile('img')) {
+
             $filenameWithExt = $request->file('img')->getClientOriginalName();
             $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
             $extension = $request->file('img')->getClientOriginalExtension();
             $fileNameToStore = $filename . '_' . time() . '.' . $extension;
             $path = $request->file('img')->storeAs('public/images', $fileNameToStore);
-        } else {
-            $fileNameToStore = 'noimg.jpg';
-        }
+
 
 
         \Bus::chain([
@@ -53,9 +51,9 @@ try{
 
         return redirect('upload-image')->with('status', 'Image Has been uploaded');
     }
- catch(Exception $e) {
-return $e->getMessage();
-}
+        catch(Exception $e) {
+        return $e->getMessage();
+        }
     }
 
 }
